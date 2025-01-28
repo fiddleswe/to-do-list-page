@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>To-Do List</title>
+    <style>
+        body {
+            background-color: rgb(24, 24, 23);
+            text-align: center;
+            margin: 0;
+            padding: 0;
+            font-family: Verdana, Geneva, Tahoma, sans-serif;
+            text-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            
+        }
+
+        .container {
+            max-width: 400px;
+            margin: 50px auto;
+            background-color: #f4eeee;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        .form {
+            display: flex;
+            gap: 10px;
+        }
+
+        .input {
+            flex: 1;
+            padding: 10px;
+            border: 1px solid #DDD;
+            border-radius: 4px;
+            font-family: Verdana, Geneva, Tahoma, sans-serif;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            text-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        .button {
+            flex: 1;
+            padding: 10px 20px;
+            border: none;
+            background-color: black;
+            color: #DDD;
+            border-radius: 4px;
+            cursor: pointer;
+            font-family: Verdana, Geneva, Tahoma, sans-serif;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);           
+            text-shadow: 0 2px 5px rgba(241, 241, 241, 0.1);
+        }
+
+        button:hover{
+            background-color: #322f39;
+        }
+ 
+        ul{
+            list-style: none;
+            padding: 0;
+        }
+ 
+        li{
+            padding: 10px;
+            border: 1px solid #ddd;
+            margin: 5px 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-radius: 4px;
+        }
+ 
+        li button{
+            background-color: #dc3545;
+            border: none;
+            color: #FFF;
+            padding: 5px 10px;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+ 
+        li button:hover{
+            background-color: #c82333;
+        }
+
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>To Do List</h1>
+        <form id="task-form">
+            <input type="text" id="task-input" class="input" placeholder="Input Task...">
+            <button type="submit" class="button">Add Task</button>
+        </form>
+        <ul id="task-list"></ul>
+    </div>
+    
+    <script>
+        document.getElementById('task-form').addEventListener('submit',
+        function (e) {
+          e.preventDefault();
+   
+          const taskinput = document.getElementById('task-input');
+          const tasktext = taskinput.value.trim();
+   
+          if (tasktext) {
+            addTaskToUl(tasktext);
+            saveTaskToSheet(tasktext);
+            taskinput.value = "";
+          }
+        });
+   
+        function addTaskToUl(tasktext){
+          const tasklist = document.getElementById('task-list');
+          const li = document.createElement('li');
+          li.textContent = tasktext;
+   
+          const deletebutton = document.createElement('button');
+          deletebutton.textContent = 'Delete';
+          deletebutton.addEventListener('click',
+          function () {
+            li.remove();
+            deleteTaskFromSheet(tasktext);
+          });
+   
+          li.appendChild(deletebutton);
+          tasklist.appendChild(li);
+        }
+   
+        function saveTaskToSheet(tasktext) {
+          google.script.run.saveTask(tasktext);
+        }
+   
+        function deleteTaskFromSheet(tasktext) {
+          google.script.run.deleteTask(tasktext);
+        }
+   
+      </script>  
+</body>
+</html>
